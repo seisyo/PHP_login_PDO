@@ -27,8 +27,8 @@ class SQL_class{
 	// 	return $cols;
 	// }
 
-	public function selection($table_name, $columns = [], $wherecon = 1, $whereval = 1){
-		//查詢資料並輸出
+	public function Select($table_name, $columns = [], $wherecon = 1, $whereval = 1){
+		//查詢資料並輸出(login & suggest)
 		try{
 			if(empty($columns)){//先將columns裡的欄位連接成字串
 				$columns= '*';
@@ -44,12 +44,11 @@ class SQL_class{
 			printf("Database Connect Error: %s", $e->getMessage());
 			}
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
-		//$result->fetchAll(PDO::FETCH_NUM);//將結果fetch出來
 		var_dump($result);
 	}
 	
-	public function insertion($table_name, $columns = [], $account, $content){
-		//插入新資料
+	public function Insert($table_name, $columns = [], $account, $content){
+		//插入新資料(login & suggest)
 		try{
 			if(empty($columns)){//先將columns裡的欄位連接成字串
 				$columns= '*';
@@ -58,19 +57,44 @@ class SQL_class{
 			}else{
 				$columns = implode(",",$columns);
 			}
-			$sql = "insert into ".$table_name." ( ".$columns." ) "." values (:account,:content);";
+			$sql = "insert into ".$table_name." ( ".$columns." ) "." values (:account,:content);";//先將變數以外的地方串接起來
 			$sth = $this->link->prepare($sql);
-			$sth->execute(array(':account'=>$account, ':content'=>md5($content)));//再prepare變數執行
+			$sth->execute(array(':account'=>$account, ':content'=>$content));//再prepare變數執行
 		}catch(PDOException $e){
 			printf("Database Connect Error: %s", $e->getMessage());
 			}
 	}
-	
+
+	public function Delete($table_name, $suggestid){
+		//刪除資料(suggest)
+		try{
+			$sql = "delete from ".$table_name." where id = :suggestid";
+			$sth = $this->link->prepare($sql);
+			$sth->execute(array(':suggestid'=>$suggestid));
+		}catch(PDOException $e){
+			printf("Database Connect Error: %s", $e->getMessage());
+			}
+	}
+
+	public function Update($table_name, $column, $content, $id){
+		//編輯資料(suggest)
+		try{
+			$sql = "update ".$table_name." set ".$column." = :content where id = :id";
+			$sth = $this->link->prepare($sql);
+			$sth->execute(array(':content'=>$content, ':id'=>$id));
+		}catch(PDOException $e){
+			printf("Database Connect Error: %s", $e->getMessage());
+			}
+	}
+
+
 	public function __destruct(){
 		$this->link = null;
 		echo "<br>"."Bye~!";
 	}
 }
 $o = new SQL_class('127.0.0.1','rakuda_seisyo', 'rakuda', 'QzcE2BXsyp6nU3MD');
-$o->selection('`login`',['`account`','`md5_password`'],'`account`','abc');
-$o -> insertion('`login`',['`account`','`md5_password`'],'seisyo','12345678');
+$o->Select('`login`',['`account`','`md5_password`'],'`account`','abc');
+$o->Insert('`login`',['`account`','`md5_password`'],'seisyo',md5('12345678'));
+$o->Delete('`suggests`','3');
+$o->Update('`suggests`','`content`','SQL&PHP','6');
