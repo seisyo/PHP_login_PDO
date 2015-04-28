@@ -12,7 +12,7 @@ class SQL_class{
 		}catch(PDOException $e){
 			printf("DatabaseError: %s", $e->getMessage());
 			}
-		echo "Connect successfully!"."<br>";
+		//echo "Connect successfully!"."<br>";
 	}
 	
 	// public function implodecolumns($cols = []){
@@ -31,27 +31,28 @@ class SQL_class{
 		//查詢資料並輸出(login & suggest)
 		try{
 			if(empty($columns)){//先將columns裡的欄位連接成字串
-				$columns= '*';
+				$columns= ' * ';
 			}elseif(is_string($columns)){
 				return 'Please input array!';
 			}else{
 				$columns = implode(",",$columns);
 			}
-			$sql = "select ".$columns." from ".$table_name." where".$wherecon."= :whereval;";//先將變數以外的地方串接起來
-			$sth = $this->link->prepare($sql);
+			$sql = "select ".$columns." from ".$table_name." where ".$wherecon." = :whereval;";//先將變數以外的地方串接起來
+			$sth = $this->link->prepare($sql);		
 			$sth->execute(array(':whereval'=>$whereval));//再prepare變數執行
 		}catch(PDOException $e){
 			printf("Database Connect Error: %s", $e->getMessage());
 			}
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
-		var_dump($result);
+		return $result;
 	}
 	
-	public function Insert($table_name, $columns = [], $account, $content){
+	public function Insert($table_name, $columns = [], $account = 1, $content = 1){
 		//插入新資料(login & suggest)
 		try{
 			if(empty($columns)){//先將columns裡的欄位連接成字串
 				$columns= '*';
+				echo "haha";
 			}elseif(is_string($columns)){
 				return 'Please input array!';
 			}else{
@@ -87,14 +88,26 @@ class SQL_class{
 			}
 	}
 
+	public function Max($table_name, $column){
+		try{
+			$sql = "select max(".$column.") from ".$table_name.';';
+			$sth = $this->link->prepare($sql);
+			$sth->execute();
+		}catch(PDOException $e){
+			printf("Database Connect Error: %s", $e->getMessage());
+			}
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+		return $result;
+	}
 
 	public function __destruct(){
 		$this->link = null;
-		echo "<br>"."Bye~!";
+		//echo "<br>"."Bye~!";
 	}
 }
-$o = new SQL_class('127.0.0.1','rakuda_seisyo', 'rakuda', 'QzcE2BXsyp6nU3MD');
-$o->Select('`login`',['`account`','`md5_password`'],'`account`','abc');
-$o->Insert('`login`',['`account`','`md5_password`'],'seisyo',md5('12345678'));
-$o->Delete('`suggests`','3');
-$o->Update('`suggests`','`content`','SQL&PHP','6');
+// $o = new SQL_class('127.0.0.1','rakuda_seisyo', 'rakuda', 'QzcE2BXsyp6nU3MD');
+// $k = $o->Select('`login`',[],'`account`','abc');
+// $o->Insert('`login`',['`account`','`md5_password`'],'seisyo',md5('12345678'));
+// $o->Insert('`suggests`',['`account`','`content`'],'seisyo','XDDDDDDD');
+// $o->Delete('`suggests`','3');
+// $o->Update('`suggests`','`content`','SQL&PHP','6');
