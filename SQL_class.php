@@ -58,7 +58,7 @@ class SQL_class{
 			}else{
 				$columns = implode(",",$columns);
 			}
-			$sql = "insert into ".$table_name." ( ".$columns." ) "." values (:account,:content);";//先將變數以外的地方串接起來
+			$sql = "insert into ".$table_name." ( ".$columns." ,`datetime`) "." values (:account,:content,'".date("Y-m-d H:i:s")."');";//先將變數以外的地方串接起來
 			$sth = $this->link->prepare($sql);
 			$sth->execute(array(':account'=>$account, ':content'=>$content));//再prepare變數執行
 		}catch(PDOException $e){
@@ -109,5 +109,6 @@ class SQL_class{
 // $k = $o->Select('`login`',[],'`account`','abc');
 // $o->Insert('`login`',['`account`','`md5_password`'],'seisyo',md5('12345678'));
 // $o->Insert('`suggests`',['`account`','`content`'],'seisyo','XDDDDDDD');
+// var_dump($o);
 // $o->Delete('`suggests`','3');
 // $o->Update('`suggests`','`content`','SQL&PHP','6');

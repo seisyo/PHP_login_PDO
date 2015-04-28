@@ -23,7 +23,8 @@ check_member();
 		foreach ($resultarr as $value) {
 			echo "ID: ".$value["id"]."<br>";
 			echo "帳號: ".$value["account"]."<br>";
-			echo $value["content"]."<hr>";
+			echo $value["content"]."<br>";
+			echo "發佈時間：".$value["datetime"]."<hr>";
 		}
 		echo "共有".count($resultarr)."筆留言";
 		?>

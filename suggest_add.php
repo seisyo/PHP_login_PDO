@@ -2,7 +2,6 @@
 session_start();
 include("check_member.php");
 check_member();
-
 //使用者填寫內容
 $sugname = $_SESSION["username"];
 $sugcontent = $_POST["content"];
