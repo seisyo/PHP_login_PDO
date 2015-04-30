@@ -5,7 +5,7 @@ check_member();
 
 //使用者填寫內容
 $sugname = $_SESSION["username"];
-$sugid = $_POST["your_suggest_id"];
+$sugid = $_POST["post_id"];
 
 //匯入資料庫連線資訊
 include("connect_info.php");
@@ -18,15 +18,15 @@ if($sugid <= $maxid){
 	if($result[0]["account"] === $sugname){
 		$user->Delete('`suggests`', $sugid);
 		$_SESSION["msg"] = "成功刪除留言";
-		header("Location:suggest_main.php");
+		header("Location:suggest_view.php");
 	}
 	else{
-		$_SESSION["msg"] = "無權刪除留言";
-		header("Location:suggest_main.php");
+		$_SESSION["msg"] = "刪除留言失敗";
+		header("Location:suggest_view.php");
 	}
 }
 else{
 	$_SESSION["msg"] = "無此留言";
-	header("Location:suggest_main.php");
+	header("Location:suggest_view.php");
 }
 

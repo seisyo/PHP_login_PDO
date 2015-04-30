@@ -19,7 +19,7 @@ check_member();
 			echo $_SESSION["username"]."<br>";
 			?>
 			請輸入要刪除的留言ID：
-			<input type="text" name="your_suggest_id"><br>
+			<input type="text" name="post_id"><br>
 			
 			<input type="submit" name="Submit" value="確定刪除">
 			<input type="Reset" name="Reset" value="重新填寫">
